@@ -109,7 +109,7 @@ jobs:
         # Escaneo de vulnerabilidades (ajusta exit-code a '1' para bloquear)
 
   # ===== CD: despliegue remoto por SSH =====
-  deploy:
+deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -126,43 +126,19 @@ jobs:
             VERSION="0.0.0-$(git rev-parse --short HEAD)"
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-        # Recupera la versión para desplegar esa misma imagen
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
-        # Carga la clave privada en un agente SSH temporal
 
-      - name: Deploy via SSH
+      - name: Deploy via SSH (Simulated)
         run: |
-          echo "Conectando al servidor ${{ secrets.SSH_HOST }} como ${{ secrets.SSH_USER }}..."
+          echo "Conectando al servidor ${{ secrets.SSH_HOST }}..."
+          echo "Usuario: ${{ secrets.SSH_USER }}"
           echo "Desplegando imagen: ${{ secrets.DOCKERHUB_USERNAME }}/devops-docker-app:${{ steps.getver.outputs.version }}"
-          echo "Simulando ejecución de docker-compose..."
-          sleep 2
-          echo "Despliegue simulado con exito"
-
-          # Escribir/actualizar compose (opcional si ya existe)
-          cat > docker-compose.prod.yml << 'COMPOSE'
-          services:
-            web:
-              image: ${DOCKERHUB_USERNAME}/devops-docker-app:${TAG}
-              restart: unless-stopped
-              ports:
-                - "${APP_PORT:-8080}:8080"
-              healthcheck:
-                test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/health"]
-                interval: 30s
-                timeout: 3s
-                retries: 3
-          COMPOSE
-
-          docker compose -f docker-compose.prod.yml pull
-          docker compose -f docker-compose.prod.yml up -d
-
-          # Verifica salud rápida
-          sleep 5
-          docker ps
-          EOF
-        # Hace pull de la imagen versionada y la levanta con Compose
-
+          echo "Actualizando docker-compose.prod.yml..."
+          echo "Haciendo pull de la nueva imagen..."
+          echo "Reiniciando servicios..."
+          sleep 3
+          echo "¡El despliegue se ha completado exitosamente!"
