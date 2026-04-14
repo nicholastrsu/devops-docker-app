@@ -101,7 +101,7 @@ jobs:
         # Construye y publica la imagen versionada y latest
 
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@0.22.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.version }}
           format: 'table'
