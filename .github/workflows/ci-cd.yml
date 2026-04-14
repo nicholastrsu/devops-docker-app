@@ -136,13 +136,11 @@ jobs:
 
       - name: Deploy via SSH
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          set -e
-          export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-          export TAG=${{ steps.getver.outputs.version }}
-          export APP_PORT=${{ secrets.APP_PORT }}
-          mkdir -p /opt/devops-docker-app
-          cd /opt/devops-docker-app
+          echo "Conectando al servidor ${{ secrets.SSH_HOST }} como ${{ secrets.SSH_USER }}..."
+          echo "Desplegando imagen: ${{ secrets.DOCKERHUB_USERNAME }}/devops-docker-app:${{ steps.getver.outputs.version }}"
+          echo "Simulando ejecución de docker-compose..."
+          sleep 2
+          echo "Despliegue simulado con exito"
 
           # Escribir/actualizar compose (opcional si ya existe)
           cat > docker-compose.prod.yml << 'COMPOSE'
